@@ -8,13 +8,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
+import org.androidannotations.annotations.EActivity;
 
+@EActivity
 public class BeforeAnnotationsActivity extends Activity {
 
-    TextView beerCountView;
-    int beerCount;
+    TextView countView;
+    int count;
 
     /**
      * Called when the activity is first created.
@@ -24,22 +25,22 @@ public class BeforeAnnotationsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        beerCountView = (TextView) findViewById(R.id.countView);
+        countView = (TextView) findViewById(R.id.countView);
 
-        final View addBeerButton = findViewById(R.id.addBeerButton);
-        addBeerButton.setOnClickListener(new View.OnClickListener() {
+        final View addButton = findViewById(R.id.addButton);
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addBeerButtonClicked();
+                addButton();
             }
         });
 
-        loadBeerCount();
+        loadCount();
     }
 
-    void addBeerButtonClicked() {
-        beerCount++;
-        saveBeerCount(beerCount);
+    void addButton() {
+        count++;
+        saveBeerCount(count);
         updateBeerViews();
     }
 
@@ -60,41 +61,41 @@ public class BeforeAnnotationsActivity extends Activity {
     }
 
     private void updateBeerViews() {
-        if (beerCount == 0) {
-            setTitle("Still Sober");
-            beerCountView.setText("");
+        if (count == 0) {
+            setTitle("None");
+            countView.setText("");
         } else {
-            setTitle("Drinking");
-            beerCountView.setText(Integer.toString(beerCount));
+            setTitle("Some");
+            countView.setText(Integer.toString(count));
         }
     }
 
-    void loadBeerCount() {
+    void loadCount() {
         new AsyncTask<Void, Void, Integer>() {
 
             @Override
             protected Integer doInBackground(Void... params) {
                 SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-                int beerCount = preferences.getInt("beerCount", 0);
-                return beerCount;
+                int count = preferences.getInt("count", 0);
+                return count;
             }
 
             @Override
             protected void onPostExecute(Integer beerCount) {
-                beerCountLoaded(beerCount);
+                countLoaded(beerCount);
             }
         }.execute();
     }
 
-    void beerCountLoaded(int beerCount) {
-        this.beerCount = beerCount;
+    void countLoaded(int beerCount) {
+        this.count = beerCount;
         updateBeerViews();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = this.getMenuInflater();
-        menuInflater.inflate(R.menu.beer_menu, menu);
+        menuInflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -108,8 +109,8 @@ public class BeforeAnnotationsActivity extends Activity {
     }
 
     void emergencySelected() {
-        beerCount = 0;
-        saveBeerCount(beerCount);
+        count = 0;
+        saveBeerCount(count);
         updateBeerViews();
     }
 }
