@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.TextView;
 import org.androidannotations.annotations.EActivity;
 
-@EActivity
 public class BeforeAnnotationsActivity extends Activity {
 
     TextView countView;
@@ -40,11 +39,11 @@ public class BeforeAnnotationsActivity extends Activity {
 
     void addButton() {
         count++;
-        saveBeerCount(count);
-        updateBeerViews();
+        saveCount(count);
+        updateViews();
     }
 
-    void saveBeerCount(final int beerCount) {
+    void saveCount(final int count) {
 
         new AsyncTask<Void, Void, Void>() {
 
@@ -52,7 +51,7 @@ public class BeforeAnnotationsActivity extends Activity {
             protected Void doInBackground(Void... params) {
                     getPreferences(MODE_PRIVATE)
                             .edit()
-                            .putInt("beerCount", beerCount)
+                            .putInt("count", count)
                             .commit();
                     return null;
             }
@@ -60,7 +59,7 @@ public class BeforeAnnotationsActivity extends Activity {
         }.execute();
     }
 
-    private void updateBeerViews() {
+    private void updateViews() {
         if (count == 0) {
             setTitle("None");
             countView.setText("");
@@ -81,15 +80,15 @@ public class BeforeAnnotationsActivity extends Activity {
             }
 
             @Override
-            protected void onPostExecute(Integer beerCount) {
-                countLoaded(beerCount);
+            protected void onPostExecute(Integer count) {
+                countLoaded(count);
             }
         }.execute();
     }
 
-    void countLoaded(int beerCount) {
-        this.count = beerCount;
-        updateBeerViews();
+    void countLoaded(int count) {
+        this.count = count;
+        updateViews();
     }
 
     @Override
@@ -110,7 +109,7 @@ public class BeforeAnnotationsActivity extends Activity {
 
     void emergencySelected() {
         count = 0;
-        saveBeerCount(count);
-        updateBeerViews();
+        saveCount(count);
+        updateViews();
     }
 }
